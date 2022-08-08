@@ -1,3 +1,53 @@
-from django.shortcuts import render
+from http import HTTPStatus
 
-# Create your views here.
+from django.contrib.auth.hashers import check_password, make_password
+from django.core.exceptions import ObjectDoesNotExist
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken
+
+from .models import Usuario
+from .serializers import LoginSerializer, SignupSerializer
+
+
+class Signup(APIView):
+    def post(self, request):
+        data = request.data
+        try:
+            Usuario.objects.get(email=data['email'])
+            return Response({'error': 'this email is already registered'})
+        except Exception as e:
+            print(e)
+        serializer = SignupSerializer(data=data)
+        if serializer.is_valid():
+            serializer.validated_data['password'] = make_password(
+                serializer.validated_data['password'])
+            serializer.save()
+            return Response({'created': 'user successfully created'},
+                            status=HTTPStatus.CREATED)
+        return Response(serializer.errors)
+
+
+class Login(APIView):
+    def generate_token(self, email):
+        token = RefreshToken.for_user(email)
+
+        return {
+            'refresh': str(token),
+            'access': str(token.access_token),
+        }
+
+    def post(self, request):
+        data = request.data
+        serializer = LoginSerializer(data=data)
+        try:
+            user = Usuario.objects.get(email=data['email'])
+        except ObjectDoesNotExist as e:
+            print(e)
+            return Response({'not_exist': 'this email not exists'})
+
+        if serializer.is_valid():
+            if check_password(password=data['password'], encoded=user.password):  # noqa
+                return Response(self.generate_token(user))
+            return Response({'incorrect': 'password is incorrect'})
+        return Response(serializer.errors)
