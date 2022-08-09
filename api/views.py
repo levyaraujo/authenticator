@@ -1,7 +1,10 @@
 from http import HTTPStatus
 
+import jwt
+from decouple import config
 from django.contrib.auth.hashers import check_password, make_password
 from django.core.exceptions import ObjectDoesNotExist
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -51,3 +54,21 @@ class Login(APIView):
                 return Response(self.generate_token(user))
             return Response({'incorrect': 'password is incorrect'})
         return Response(serializer.errors)
+
+
+class UserPage(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def decode_jwt(self, request):
+        try:
+            header = request.header['Authorization']
+            token = header.split()[1]
+            decoded = jwt.decode(token, config('jwt'), algorithms='HS256')
+            return decoded
+        except Exception as e:
+            print(e)
+            return False
+
+    def get(self, request):
+        token = self.decode_jwt(request=request)
+        return Response(token)
