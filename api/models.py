@@ -46,7 +46,8 @@ class Usuario(AbstractUser):
     phone = models.CharField(max_length=9)
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=100)
-    photo = models.ImageField(upload_to='api/images')
+    photo = models.ImageField(upload_to='api/images',
+                              default='api/images/user.png')
     REQUIRED_FIELDS: List = []
     USERNAME_FIELD: str = 'email'
     objects = UserManager()

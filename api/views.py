@@ -61,14 +61,29 @@ class UserPage(APIView):
 
     def decode_jwt(self, request):
         try:
-            header = request.header['Authorization']
+            header = request.headers['Authorization']
             token = header.split()[1]
             decoded = jwt.decode(token, config('jwt'), algorithms='HS256')
-            return decoded
+            return decoded['user_id']
         except Exception as e:
             print(e)
-            return False
+            return Response({'server_error': 'an error occurred'},
+                            status=HTTPStatus.INTERNAL_SERVER_ERROR)
 
     def get(self, request):
         token = self.decode_jwt(request=request)
-        return Response(token)
+        try:
+            user = Usuario.objects.get(id=token)
+            data = {
+                'name': user.name,
+                'bio': user.bio,
+                'email': user.email,
+                'phone': user.phone,
+                # 'photo': user.photo
+            }
+            print(user.photo)
+            return Response({'data': data})
+
+        except Exception as e:
+            print(e)
+            return Response('failed')
