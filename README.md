@@ -1,14 +1,16 @@
-# 🔒 Authenticator (em andamento)
-Projeto de autenticação de usuário utilizando Django, aplicação de API Restful e clean code.
+# 🔒 API de cadastro e autenticação de usuários
 ---
-Esse projeto visa melhorar minhas habilidades em Python, banco de dados com PostgreSQL e front-end com JavaScript e React.
+API REST de cadastro e autenticação de usuários escrito em Python (Django).
 
-# 🐱‍💻 Tecnologias
+## 💻 Tecnologias e arquiteturas usadas
+
+- Python
 - Django
-- Pytest
-- PostgreSQL
-- Integração com Google
-- Postman para testes da API
-- Clean Code
-- JavaScript
-- React
+- SQLite
+- REST
+- JWT Authentication
+
+
+## 🗒 API Doc
+
+Rotas da API:
