@@ -5,12 +5,18 @@ from rest_framework import serializers
 from .models import Usuario
 
 
-class SignupSerializer(serializers.ModelSerializer):
+class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Usuario
-        fields: List[str] = ['name', 'email', 'password']
+        fields: List[str] = ["name", "cpf", "password", "role"]
+
+
+class ChangeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Usuario
+        fields: List[str] = ["id", "name", "cpf", "password"]
 
 
 class LoginSerializer(serializers.Serializer):
-    email = serializers.CharField(max_length=70)
+    cpf = serializers.CharField(max_length=70)
     password = serializers.CharField(max_length=100)

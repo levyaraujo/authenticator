@@ -12,7 +12,7 @@ class UserManager(BaseUserManager):
     def _create_user(self, email, password, **extra_fields):
         """Create and save a User with the given email and password."""
         if not email:
-            raise ValueError('The given email must be set')
+            raise ValueError("The given email must be set")
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
@@ -21,35 +21,37 @@ class UserManager(BaseUserManager):
 
     def create_user(self, email, password=None, **extra_fields):
         """Create and save a regular User with the given email and password."""
-        extra_fields.setdefault('is_staff', False)
-        extra_fields.setdefault('is_superuser', False)
+        extra_fields.setdefault("is_staff", False)
+        extra_fields.setdefault("is_superuser", False)
         return self._create_user(email, password, **extra_fields)
 
     def create_superuser(self, email, password, **extra_fields):
         """Create and save a SuperUser with the given email and password."""
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_superuser", True)
 
-        if extra_fields.get('is_staff') is not True:
-            raise ValueError('Superuser must have is_staff=True.')
-        if extra_fields.get('is_superuser') is not True:
-            raise ValueError('Superuser must have is_superuser=True.')
+        if extra_fields.get("is_staff") is not True:
+            raise ValueError("Superuser must have is_staff=True.")
+        if extra_fields.get("is_superuser") is not True:
+            raise ValueError("Superuser must have is_superuser=True.")
 
         return self._create_user(email, password, **extra_fields)
 
 
 class Usuario(AbstractUser):
+    ROLE_CHOICES = (("A", "Admin"), ("C", "Comum"))
+
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=70)
     username = None
-    bio = models.TextField()
-    phone = models.CharField(max_length=9)
-    email = models.EmailField(unique=True)
+    cpf = models.CharField(max_length=11, unique=True, default=None)
     password = models.CharField(max_length=100)
-    photo = models.ImageField(upload_to='api/images',
-                              default='api/images/user.png')
+    role = models.CharField(
+        max_length=1, choices=ROLE_CHOICES, blank=False, null=False, default="C"  # noqa
+    )
+
     REQUIRED_FIELDS: List = []
-    USERNAME_FIELD: str = 'email'
+    USERNAME_FIELD: str = "cpf"
     objects = UserManager()
 
     def __str__(self):

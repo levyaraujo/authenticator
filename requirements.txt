@@ -1,7 +1,4 @@
-asgiref==3.5.2
-attrs==22.1.0
 autopep8==1.6.0
-backports.zoneinfo==0.2.1
 Django==4.1
 djangorestframework==3.13.1
 djangorestframework-simplejwt==5.2.0
@@ -24,5 +21,3 @@ python-decouple==3.6
 pytz==2022.1
 sqlparse==0.4.2
 toml==0.10.2
-tomli==2.0.1
-typing-extensions==4.3.0
