@@ -50,18 +50,21 @@ class Login(APIView):
         serializer = LoginSerializer(data=data)
         try:
             user = Usuario.objects.get(cpf=data["cpf"])
+            if serializer.is_valid():
+                if check_password(
+                    password=data["password"], encoded=user.password
+                ):  # noqa
+                    return Response(self.generate_token(user), 200)
+
+                return Response(
+                    {"incorrect": "password is incorrect"}, HTTPStatus.UNAUTHORIZED
+                )
         except ObjectDoesNotExist as e:
             print(e)
             return Response(
                 {"not_exist": "cpf not exists"}, HTTPStatus.UNAUTHORIZED
             )  # noqa
 
-        if serializer.is_valid():
-            if check_password(password=data["password"], encoded=user.password):  # noqa
-                return Response(self.generate_token(user))
-            return Response(
-                {"incorrect": "password is incorrect"}, HTTPStatus.UNAUTHORIZED
-            )
         return Response(serializer.errors)
 
 
@@ -117,7 +120,7 @@ class UserPage(APIView):
         try:
             if logged_user.role == "A":
                 if serializer.is_valid(raise_exception=True):
-                    data['password'] = make_password(data['password'])
+                    data["password"] = make_password(data["password"])
                     user = Usuario.objects.filter(id=id)
                     user.update(**data)
                     return Response(
