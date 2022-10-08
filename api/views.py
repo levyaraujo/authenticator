@@ -4,6 +4,7 @@ import jwt
 from decouple import config
 from django.contrib.auth.hashers import check_password, make_password
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
+from django.shortcuts import render
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -11,6 +12,10 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import Usuario
 from .serializers import ChangeSerializer, LoginSerializer, RegisterSerializer
+
+
+def homepage(request):
+    return render(request, "docs.html", status=200)
 
 
 class Register(APIView):
