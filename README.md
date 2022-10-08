@@ -23,6 +23,8 @@ API REST de cadastro e autenticação de usuários escrito em Python (Django).
 
 ## 🚀 Como executar
 
+***Sigas as instruções contidas na documentação:*** [Docs](https://lev0x79.pythonanywhere.com/api/docs)
+
 - **Localhost**:
   
   ```bash
