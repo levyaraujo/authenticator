@@ -46,9 +46,7 @@ class Usuario(AbstractUser):
     username = None
     cpf = models.CharField(max_length=11, unique=True, default=None)
     password = models.CharField(max_length=100)
-    role = models.CharField(
-        max_length=1, choices=ROLE_CHOICES, blank=False, null=False, default="C"  # noqa
-    )
+    role = models.CharField(max_length=1, choices=ROLE_CHOICES)
 
     REQUIRED_FIELDS: List = []
     USERNAME_FIELD: str = "cpf"

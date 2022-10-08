@@ -14,7 +14,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 class ChangeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Usuario
-        fields: List[str] = ["id", "name", "cpf", "password"]
+        fields: List[str] = ["name", "password", "role"]
 
 
 class LoginSerializer(serializers.Serializer):

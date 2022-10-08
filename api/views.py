@@ -41,7 +41,6 @@ class Login(APIView):
         token = RefreshToken.for_user(cpf)
 
         return {
-            "refresh": str(token),
             "access": str(token.access_token),
         }
 
@@ -90,10 +89,18 @@ class UserPage(APIView):
             user = Usuario.objects.get(id=token)
             all_users = Usuario.objects.all()
             users = []
-            print(users)
+            roles = dict(Usuario.ROLE_CHOICES)
+            print(roles)
 
             for user in all_users:
-                users.append({"id": user.id, "name": user.name})
+                users.append(
+                    {
+                        "id": user.id,
+                        "name": user.name,
+                        "cpf": user.cpf,
+                        "role": roles[user.role],
+                    }
+                )
 
             return Response({"users": users})
 
@@ -112,14 +119,20 @@ class UserPage(APIView):
             )
 
     def patch(self, request, id):
-        data = request.data
+        data: dict = request.data
         serializer = ChangeSerializer(data=data, partial=True)
         token = self.decode_jwt(request)
         logged_user = Usuario.objects.get(id=token)
 
+        if "cpf" in data.keys():
+            return Response(
+                {"unauthorized": "You cannot change user's CPF"},
+                HTTPStatus.UNAUTHORIZED,
+            )
+
         try:
             if logged_user.role == "A":
-                if serializer.is_valid(raise_exception=True):
+                if serializer.is_valid():
                     data["password"] = make_password(data["password"])
                     user = Usuario.objects.filter(id=id)
                     user.update(**data)
@@ -129,12 +142,15 @@ class UserPage(APIView):
                 return Response(serializer.errors)
 
             return Response(
-                {"unauthorized": "You don't have permission to perform this action"}
+                {"unauthorized": "You don't have permission to perform this action"},
+                HTTPStatus.UNAUTHORIZED,
             )
 
         except KeyError as e:
             print(e)
-            return Response({"field_required": f"The {e} field is required"})
+            return Response(
+                {"field_required": f"The {e} field is required"}, HTTPStatus.BAD_REQUEST
+            )
 
         except Usuario.DoesNotExist:
             return Response({"not_found": "User does not exists"}, HTTPStatus.NOT_FOUND)
