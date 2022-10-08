@@ -14,10 +14,10 @@ API REST de cadastro e autenticação de usuários escrito em Python (Django).
 
 ## 📌 Endpoints
 
-**POST ** /api/register  
-**POST ** /api/login
-**GET ** /api/users  
-**PATCH ** /api/users/edit/<<int:user_id>>
+**POST** /api/register  
+**POST** /api/login
+**GET** /api/users  
+**PATCH** /api/users/edit/<<int:user_id>>
 
 
 
