@@ -14,8 +14,12 @@ from .models import Usuario
 from .serializers import ChangeSerializer, LoginSerializer, RegisterSerializer
 
 
+def docs(request):
+    return render(request, "docs.html", HTTPStatus.OK)
+
+
 def homepage(request):
-    return render(request, "docs.html", status=200)
+    return Response("Auth Homepage", HTTPStatus.OK)
 
 
 class Register(APIView):

@@ -3,10 +3,11 @@ from typing import List
 from django.urls import path
 from rest_framework_simplejwt.views import TokenVerifyView
 
-from .views import Login, Register, UserPage, homepage
+from .views import Login, Register, UserPage, docs, homepage
 
 urlpatterns: List = [
-    path("docs", homepage, name="home"),
+    path("", homepage, name="home"),
+    path("docs", docs, name="docs"),
     path("register", Register.as_view(), name="register"),
     path("login", Login.as_view(), name="login"),
     path("users", UserPage.as_view(), name="user_page"),
