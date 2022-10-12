@@ -9,3 +9,5 @@ toml==0.10.2
 names==0.3.0
 gunicorn==20.1.0
 django-heroku==0.3.1
+django-storages==1.13.1
+boto3==1.24.89

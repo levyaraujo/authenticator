@@ -1,3 +1,4 @@
+import os
 from http import HTTPStatus
 
 import jwt
@@ -79,7 +80,7 @@ class UserPage(APIView):
         try:
             header = request.headers["Authorization"]
             token = header.split()[1]
-            decoded = jwt.decode(token, config("jwt"), algorithms="HS256")
+            decoded = jwt.decode(token, os.getenv("jwt"), algorithms="HS256")
             return decoded["user_id"]
         except Exception as e:
             print(e)
